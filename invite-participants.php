@@ -8,13 +8,15 @@ session_start();
 if(!isset($_SESSION['user_id'])){
     header('location:login.php');
 }
-
+if(!isset($_GET['event_id'])){
+    header('location:list-event.php');
+}
 ?>
 <!doctype html>
 <html>
 <body>   
 <p style="font-size:160%;text-align:center">Invite Participants</P>
-<form action="invite-participants.php" method="post">
+<?php echo '<form action="invite-participants.php?event_id='.$_GET['event_id'].'"'?> method="post">
 <label for="status">Status:</label><br>
 <input type="text" name="status"  required=""><br>
 <label for="name">Name:</label><br>        
@@ -41,10 +43,10 @@ if(!isset($_SESSION['user_id'])){
        $row=mysqli_fetch_array($fetch);
     
        if(is_array($row)){
-           $_SESSION['event_id']=$row['event_id']; 
-    $sql="insert into participants(name,status,email,event_id) values('".$_POST['name']."','".$_POST['status']."','".$_POST['email']."','".$_SESSION['event_id']."')";
+          
+    $sql="insert into participants(name,status,email,event_id) values('".$_POST['name']."','".$_POST['status']."','".$_POST['email']."','".$_GET['event_id']."')";
    
-
+echo 'values inserted successfully';
     mysqli_query($conn, $sql);
     mysqli_close($conn);
     }

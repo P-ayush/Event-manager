@@ -8,7 +8,8 @@ if(!isset($_SESSION['user_id']))
 ?>
 <html>
 <body>
-    
+ <!--<button onclick="document.location='list-event-org_id.php'"> Event</button>!-->
+ <button><?php echo '<a href=list-event-org_id.php?org_id='. $_SESSION['org_id']?>> Event</a> </button>
 
 
 <?php
@@ -42,12 +43,12 @@ if(!isset($_SESSION['user_id']))
   echo"</tr>
   <tr>
     <td> ".$row['user_id'] ."</td>
-    <td>".$row['organisation_id']."</td>
+    <td><a href=list-event-org_id.php?org_id=".$row['organisation_id'].">".$row['organisation_id']. "</a></td>
     <td>".$row['name']."</td>
     <td>".$row['address']."</td>
   </tr>";
   
-
+  $_SESSION['org_id']=$row['organisation_id'];
 
         }
       echo "</table>";
