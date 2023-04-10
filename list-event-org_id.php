@@ -9,11 +9,13 @@ if(!isset($_SESSION['user_id']))
     header("Location: login.php");
 
 }
-if(!isset($_GET['org_id']))
-{
-    header("Location: list-org.php");
-
+/*if(isset($_GET['event_id']) OR isset($_GET['org_id'])){
+  header("Location: list-event-org_id.php");
+}*/
+if(!isset($_GET['org_id'])){
+header('location:list-org.php');
 }
+
 ?>
 <html>
 <body>
@@ -61,7 +63,8 @@ $sql="select event.event_name, event.start_time, event.end_time,event.location,e
     <td>".$row['location']."</td>
     <td>".$row['maximum_participants']."</td>
     <td>".$row['registration_close']."</td>
-    
+    <td><a href =edit-event.php?event_id=".$row['event_id'].">Edit</a></td>
+    <td><a href =delete-event.php?event_id=".$row['event_id'].">Delete</a></td>
   </tr>";
   
 

@@ -48,7 +48,7 @@ if(isset($_POST)){
     mysqli_query($conn, $sql);
     mysqli_close($conn);
     if(isset($_POST['create_event'])){
-        header('location:list-event.php');
+        header('location:list-event-org_id.php');
     }
 }
 }

@@ -9,7 +9,7 @@ if(!isset($_SESSION['user_id'])){
     header('location:login.php');
 }
 if(!isset($_GET['event_id'])){
-    header('location:list-event.php');
+    header('location:list-event-org_id.php');
 }
 ?>
 <!doctype html>
