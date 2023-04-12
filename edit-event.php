@@ -43,8 +43,17 @@ $conn = mysqli_connect($servername,
 if(isset($_POST)){
     if(isset($_POST['submit'])){
 
-  $update="update event set event_name='".$_POST['event_name']."',location='".$_POST['location']."',start_time='".$_POST['start_time']."',end_time='".$_POST['end_time']."',maximum_participants='".$_POST['max_participants']."',registration_close='".$_POST['reg_close']."' where event_id=".$_GET['event_id'];
-  mysqli_query($conn,$update);
+  $update="update event set event_name=?,location=?,start_time=?,end_time=?,maximum_participants=?,registration_close=? where event_id=?";
+  $stmt=mysqli_stmt_init($conn);
+  if(!mysqli_stmt_prepare($stmt,$update)){
+    echo "SQL error";
+}else{
+    mysqli_stmt_bind_param($stmt,"sssssss",$_POST['event_name'],$_POST['location'],$_POST['start_time'],$_POST['end_time'],$_POST['max_participants'],$_POST['reg_close'],$_GET['event_id']);
+    mysqli_stmt_execute($stmt);
+    $result= mysqli_stmt_get_result($stmt);
+  
+}
+  
   
   header('location:list-event-org_id.php');
   mysqli_close($conn);

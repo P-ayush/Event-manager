@@ -39,9 +39,16 @@ $conn = mysqli_connect($servername,
 if(isset($_POST['login'])){
     $email=$_POST['email'];
     $pass=$_POST['password'];
-    $select= mysqli_query($conn,"select user_id  from users where email='$email' and password='$pass'");
-    $row=mysqli_fetch_array($select);
-    
+    $sql="select user_id  from users where email=? and password=?";
+    $stmt=mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt,$sql)){
+        echo "SQL error";
+    }else{
+        mysqli_stmt_bind_param($stmt,"ss",$email,$pass);
+        mysqli_stmt_execute($stmt);
+        $select= mysqli_stmt_get_result($stmt);
+        $row=mysqli_fetch_array($select);
+    }
     if(is_array($row)){
         $_SESSION['user_id']=$row['user_id'];
       
@@ -52,10 +59,12 @@ if(isset($_POST['login'])){
         echo 'alert("Invalid Username or Password")';
         echo '</script>';
     }
+    
+ 
 }
 
 ?>
-<a href="\Ayush\event-site\signup.php" target="_blank">Sign-up</a>
+<a href="\Event-manager\signup.php" target="_blank">Sign-up</a>
 
     
 

@@ -1,4 +1,3 @@
-
 <?php
 /*
 add user id instead of email in event table
@@ -12,9 +11,7 @@ if(!isset($_SESSION['user_id']))
 /*if(isset($_GET['event_id']) OR isset($_GET['org_id'])){
   header("Location: list-event-org_id.php");
 }*/
-if(!isset($_GET['org_id'])){
-header('location:list-org.php');
-}
+
 
 ?>
 <html>
@@ -33,8 +30,8 @@ header('location:list-org.php');
     $conn = mysqli_connect($servername,
             $username, $password,$database);
             
-/*$sql="select event.event_name, event.start_time, event.end_time,event.location,event.maximum_participants,event.registration_close,event.event_id,event.user_id,organisation.organisation_id from event inner join organisation on event.user_id=organisation.user_id where event.user_id=".$_SESSION['user_id'];*/
-    $sql="select * from event where user_id=" .$_SESSION['user_id'] ;
+$sql="select event.event_name, event.start_time, event.end_time,event.location,event.maximum_participants,event.registration_close,event.event_id,event.user_id,organisation.organisation_id from event inner join organisation on event.user_id=organisation.user_id where event.user_id=".$_SESSION['user_id'];
+   /* $sql="select * from event where user_id=" .$_SESSION['user_id'];*/
   
     $result=mysqli_query($conn,$sql);
 

@@ -44,11 +44,20 @@ if(!isset($_GET['event_id'])){
     
        if(is_array($row)){
           
-    $sql="insert into participants(name,status,email,event_id) values('".$_POST['name']."','".$_POST['status']."','".$_POST['email']."','".$_GET['event_id']."')";
-   
-echo 'values inserted successfully';
-    mysqli_query($conn, $sql);
-    mysqli_close($conn);
+    $sql="insert into participants(name,status,email,event_id) values(?,?,?,?)";
+    $stmt=mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt,$sql)){
+      echo "SQL error";
+  }else{
+      mysqli_stmt_bind_param($stmt,"ssss",$_POST['name'],$_POST['status'],$_POST['email'],$_GET['event_id']);
+      
+      echo 'values inserted successfully';
+      mysqli_stmt_execute($stmt);
+      $result= mysqli_stmt_get_result($stmt);
+      header('location:list-event-org_id.php');
+      mysqli_close($conn);
+  } 
+
     }
 }
     }

@@ -38,8 +38,17 @@ if(isset($_POST)){
     $conn = mysqli_connect($servername,
             $username, $password,$database);
             
-    $sql="insert into organisation(name, address,user_id) values('".$_POST['name']."','".$_POST['address']."','".$_SESSION['user_id']."')";
-    mysqli_query($conn, $sql);
+    $sql="insert into organisation(name, address,user_id) values(?,?,?)";
+    $stmt=mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt,$sql)){
+      echo "SQL error";
+  }else{
+      mysqli_stmt_bind_param($stmt,"sss",$_POST['name'],$_POST['address'],$_SESSION['user_id']);
+      mysqli_stmt_execute($stmt);
+      $result= mysqli_stmt_get_result($stmt);
+    
+  }
+ 
     mysqli_close($conn); 
     if(isset($_POST['create_org'])){
         header('location:list-org.php');

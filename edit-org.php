@@ -34,8 +34,17 @@ $conn = mysqli_connect($servername,
 if(isset($_POST)){
     if(isset($_POST['submit'])){
 
-  $update="update organisation set name='".$_POST['name']."',address='".$_POST['address']."' where organisation_id=".$_GET['org_id'];
-  mysqli_query($conn,$update);
+  $update="update organisation set name=?,address=? where organisation_id=?";
+  $stmt=mysqli_stmt_init($conn);
+  if(!mysqli_stmt_prepare($stmt,$update)){
+    echo "SQL error";
+}else{
+    mysqli_stmt_bind_param($stmt,"sss",$_POST['name'],$_POST['address'],$_GET['org_id']);
+    mysqli_stmt_execute($stmt);
+    $result= mysqli_stmt_get_result($stmt);
+  
+}
+ 
   
   header('location:list-org.php');
   mysqli_close($conn);

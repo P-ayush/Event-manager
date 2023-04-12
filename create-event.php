@@ -44,13 +44,22 @@ if(isset($_POST)){
             
    
     
-    $sql="insert into event(event_name,location,start_time,end_time,maximum_participants,registration_close,user_id) values('".$_POST['event_name']."','".$_POST['location']."','".$_POST['start_time']."','".$_POST['end_time']."','".$_POST['max_participants']."','".$_POST['reg_close']."','".$_SESSION['user_id']."')";
-    mysqli_query($conn, $sql);
-    mysqli_close($conn);
+    $sql="insert into event(event_name,location,start_time,end_time,maximum_participants,registration_close,user_id) values(?,?,?,?,?,?,?)";
+    $stmt=mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt,$sql)){
+      echo "SQL error";
+  }else{
+      mysqli_stmt_bind_param($stmt,"sssssss",$_POST['event_name'],$_POST['location'],$_POST['start_time'],$_POST['end_time'],$_POST['max_participants'],$_POST['reg_close'],$_SESSION['user_id']);
+      mysqli_stmt_execute($stmt);
+      $result= mysqli_stmt_get_result($stmt);
+    
+  }
+  mysqli_close($conn);
     if(isset($_POST['create_event'])){
         header('location:list-event-org_id.php');
     }
 }
+
 }
 
     ?>

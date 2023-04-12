@@ -45,13 +45,21 @@ if(isset($_POST)){
           
  
   
-  $sql="insert into users(email , password , phone_number) values('".$_POST['email']."','".$_POST['password']."','".$_POST['phone']."')";
-  if (mysqli_query($conn, $sql)) {
-    echo "New record created successfully";
+  $sql="insert into users(email , password , phone_number) values(?,?,?)";
+  $stmt=mysqli_stmt_init($conn);
+  if(!mysqli_stmt_prepare($stmt,$sql)){
+    echo "SQL error";
+}else{
+    mysqli_stmt_bind_param($stmt,"sss",$_POST['email'],$_POST['password'],$_POST['phone']);
   
-  } else {
-    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-  }
+    if (mysqli_stmt_execute($stmt)) {
+      echo "New record created successfully";
+    
+    } else {
+      echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    }
+}
+ 
   if(isset($_POST['signup'])){
     header('location:login.php');
   }
@@ -64,7 +72,7 @@ if(isset($_POST)){
   
    
     ?>
-    <a href="\Ayush\event-site\login.php" target="_blank">Login</a>
+    <a href="\Event-manager\login.php" target="_blank">Login</a>
 
 
 </body>
