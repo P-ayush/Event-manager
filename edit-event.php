@@ -7,23 +7,35 @@ if(!isset($_SESSION['user_id']))
     header("Location: login.php");
 
 }
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database="event_site";
+
+// Connection
+$conn = mysqli_connect($servername,
+        $username, $password,$database);
+
+$sql="select * from event where event_id=".$_GET['event_id'];
+$result=mysqli_query($conn,$sql);
+$row = mysqli_fetch_assoc($result);
 ?>
 <html>
     <body>
 
 <?php echo '<form action="edit-event.php?event_id='.$_GET['event_id'].'"'?> method="post">
 <label for="event_name">Event Name: </label><br>        
-<input type="text" placeholder="Enter new event name" name="event_name" required=""><br>
+<input type="text" placeholder="Enter new event name" name="event_name" value="<?php echo $row['event_name']?>" required=""><br>
 <label for="location">Location:</label><br>
-<input type="text" placeholder="Enter Location" name="location" required=""><br>
+<input type="text" placeholder="Enter Location" name="location" value="<?php echo $row['location']?>" required=""><br>
 <label for="start_time">Start Time:</label><br>
- <input type="text" placeholder="Enter start-time"name="start_time" required=""><br>
+ <input type="text" placeholder="Enter start-time"name="start_time" value="<?php echo $row['start_time']?>" required=""><br>
  <label for="end_time">End Time:</label><br>
- <input type="text" placeholder="Enter end-time" name="end_time" required=""><br>
+ <input type="text" placeholder="Enter end-time" name="end_time" value="<?php echo $row['end_time']?>" required=""><br>
  <label for="max_participants">Maximum Participants:</label><br>
- <input type="text" placeholder="Enter max participants" name="max_participants" required=""><br>
+ <input type="text" placeholder="Enter max participants" name="max_participants" value="<?php echo $row['maximum_participants']?>" required=""><br>
  <label for="reg_close">Registration Close:</label><br>
- <input type="text" name="reg_close" required=""><br>
+ <input type="text" name="reg_close" value="<?php echo $row['registration_close']?>" required=""><br>
 
 
 

@@ -49,6 +49,7 @@ if(!isset($_SESSION['user_id']))
     <td><a href=list-event-org_id.php?org_id=".$row['organisation_id'].">".$row['organisation_id']. "</a></td>
     <td>".$row['name']."</td>
     <td>".$row['address']."</td>
+    <td><a href =list-event-org_id.php?org_id=".$row['organisation_id'].">Get Event</a></td>
     <td><a href =edit-org.php?org_id=".$row['organisation_id'].">Edit</a></td>
     <td><a href =delete-org.php?org_id=".$row['organisation_id'].">Delete</a></td>
   </tr>";
@@ -67,6 +68,6 @@ if(!isset($_SESSION['user_id']))
 mysqli_close($conn);
 
 ?>
- <button><?php echo '<a href=list-event-org_id.php?org_id='. $_SESSION['org_id']?>> Event</a> </button>
+ 
 </body>
 </html>
