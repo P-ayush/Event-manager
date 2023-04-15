@@ -44,7 +44,7 @@ if(isset($_POST)){
             
    
     
-    $sql="insert into event(event_name,location,start_time,end_time,maximum_participants,registration_close,user_id) values(?,?,?,?,?,?,?)";
+    $sql="insert into event(event_name,location,start_time,end_time,maximum_participants,registration_close,user_id,status) values(?,?,?,?,?,?,?,'active')";
     $stmt=mysqli_stmt_init($conn);
     if(!mysqli_stmt_prepare($stmt,$sql)){
       echo "SQL error";

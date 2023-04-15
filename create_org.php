@@ -38,7 +38,7 @@ if(isset($_POST)){
     $conn = mysqli_connect($servername,
             $username, $password,$database);
             
-    $sql="insert into organisation(name, address,user_id) values(?,?,?)";
+    $sql="insert into organisation(name, address,user_id,status) values(?,?,?,'active')";
     $stmt=mysqli_stmt_init($conn);
     if(!mysqli_stmt_prepare($stmt,$sql)){
       echo "SQL error";
