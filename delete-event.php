@@ -31,7 +31,7 @@ $conn = mysqli_connect($servername,
        if(isset($_POST)) {
 if(isset($_POST['yes'])){
     /*$delete="delete from event where event_id=".$_GET['event_id'];*/
-    $delete="update event set status='deleted' where event_id=".$_GET['event_id'];
+    $delete="update event set status='deleted' where event_id=".$_GET['event_id']." and user_id=".$_SESSION['user_id'];
    
     mysqli_query($conn, $delete);
     header('location:list-event-org_id.php?event_id='.$_GET['event_id']);

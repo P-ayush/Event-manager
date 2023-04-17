@@ -24,7 +24,7 @@ if(!isset($_SESSION['user_id']))
             
 
     $sql="select * from organisation where user_id=".$_SESSION['user_id']. " and status='active'";
-  echo $sql;
+  /*echo $sql;*/
     $result=mysqli_query($conn,$sql);
   
         

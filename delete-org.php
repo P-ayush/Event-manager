@@ -30,9 +30,10 @@ $conn = mysqli_connect($servername,
         $username, $password,$database);
        if(isset($_POST)) {
 if(isset($_POST['yes'])){
-    $delete="update organisation set status='deleted' where organisation_id=".$_GET['org_id'];
-    mysqli_query($conn,$delete);
-    
+    $delete="update organisation set status='deleted' where organisation_id=".$_GET['org_id']. " and user_id=".$_SESSION['user_id'];
+   
+     mysqli_query($conn,$delete);
+   
     header('location:list-org.php');
     mysqli_close($conn);
        }
