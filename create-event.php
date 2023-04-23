@@ -39,7 +39,7 @@ if(isset($_POST)){
     $password = "";
     $database="event_site";
     
-    $conn = mysqli_connect($servername,
+   try{ $conn = mysqli_connect($servername,
             $username, $password,$database);
             
    
@@ -54,6 +54,11 @@ if(isset($_POST)){
       $result= mysqli_stmt_get_result($stmt);
     
   }
+   }catch(exception $ex){
+    http_response_code(404);
+    echo 'Something went wrong';
+    exit();
+   }
   mysqli_close($conn);
     if(isset($_POST['create_event'])){
         header('location:list-event-org_id.php');

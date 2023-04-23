@@ -19,14 +19,18 @@ if(!isset($_SESSION['user_id']))
     $database="event_site";
     
     // Connection
-    $conn = mysqli_connect($servername,
+   try{ $conn = mysqli_connect($servername,
             $username, $password,$database);
             
 
     $sql="select * from organisation where user_id=".$_SESSION['user_id']. " and status='active'";
   /*echo $sql;*/
     $result=mysqli_query($conn,$sql);
-  
+   } catch(Exception $ex){
+    http_response_code(404);
+echo 'something went wrong';
+exit();
+   }
         
     
     if (mysqli_num_rows($result) > 0) {

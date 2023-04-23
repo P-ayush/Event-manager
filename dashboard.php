@@ -31,13 +31,18 @@ if(!isset($_SESSION['user_id']))
     $database="event_site";
     
     // Connection
-    $conn = mysqli_connect($servername,
+  try{  $conn = mysqli_connect($servername,
             $username, $password,$database);
             
 
     $sql="select * from event where user_id=" .$_SESSION['user_id'];
   
     $result=mysqli_query($conn,$sql);
+  }catch(exception $ex){
+    http_response_code(404);
+    echo 'Something went wrong';
+    exit();
+  }
     if (mysqli_num_rows($result) > 0) {
         // output data of each row
         echo"<table>

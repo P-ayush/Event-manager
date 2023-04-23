@@ -30,14 +30,18 @@ header('location:list-org.php');
     $database="event_site";
     
     // Connection
-    $conn = mysqli_connect($servername,
+   try{ $conn = mysqli_connect($servername,
             $username, $password,$database);
             
 /*$sql="select event.event_name, event.start_time, event.end_time,event.location,event.maximum_participants,event.registration_close,event.event_id,event.user_id,organisation.organisation_id from event inner join organisation on event.user_id=organisation.user_id where event.user_id=".$_SESSION['user_id'];*/
     $sql="select * from event where user_id=" .$_SESSION['user_id']." and status='active'" ;
   
     $result=mysqli_query($conn,$sql);
-
+   }catch(exception $ex){
+    http_response_code(404);
+    echo 'Unable to fetch event list';
+    exit();
+   }
     if (mysqli_num_rows($result) > 0) {
         // output data of each row
         echo"<table>

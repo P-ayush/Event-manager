@@ -20,8 +20,13 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $database="event_site";
-$conn = mysqli_connect($servername,
-            $username, $password,$database) or die ('unable to connect')
+try {$conn = mysqli_connect($servername,
+            $username, $password,$database) or die ('unable to connect');
+}catch(exception $ex){
+    http_response_code(404);
+    echo 'unable to login';
+    exit();
+}
 ?>
 <html>
 <body>
@@ -46,6 +51,7 @@ if(isset($_POST['login'])){
     }else{
         mysqli_stmt_bind_param($stmt,"ss",$email,$pass);
         mysqli_stmt_execute($stmt);
+     
         $select= mysqli_stmt_get_result($stmt);
         $row=mysqli_fetch_array($select);
     }

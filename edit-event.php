@@ -13,11 +13,16 @@ $password = "";
 $database="event_site";
 
 // Connection
-$conn = mysqli_connect($servername,
+try{$conn = mysqli_connect($servername,
         $username, $password,$database);
 
 $sql="select * from event where event_id=".$_GET['event_id'];
 $result=mysqli_query($conn,$sql);
+}catch(exception $ex){
+  http_response_code(404);
+  echo 'unable to edit';
+  exit();
+}
 $row = mysqli_fetch_assoc($result);
 ?>
 <html>
@@ -42,14 +47,7 @@ $row = mysqli_fetch_assoc($result);
 <input type="submit" name="submit" value="edit">
 </form>
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database="event_site";
 
-// Connection
-$conn = mysqli_connect($servername,
-        $username, $password,$database);
         
 
 if(isset($_POST)){

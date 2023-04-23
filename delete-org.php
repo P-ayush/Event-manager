@@ -26,7 +26,7 @@ $password = "";
 $database="event_site";
 
 // Connection
-$conn = mysqli_connect($servername,
+try{$conn = mysqli_connect($servername,
         $username, $password,$database);
        if(isset($_POST)) {
 if(isset($_POST['yes'])){
@@ -41,6 +41,11 @@ if(isset($_POST['yes'])){
         header('location:list-org.php');
        }
       }
+    }catch(exception $ex){
+        http_response_code(404);
+        echo 'Unable to delete';
+        exit();
+    }
 ?>
 </body>
 </html> 

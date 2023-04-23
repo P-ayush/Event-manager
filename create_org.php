@@ -35,7 +35,7 @@ if(isset($_POST)){
     $password = "";
     $database="event_site";
     
-    $conn = mysqli_connect($servername,
+    try{$conn = mysqli_connect($servername,
             $username, $password,$database);
             
     $sql="insert into organisation(name, address,user_id,status) values(?,?,?,'active')";
@@ -45,10 +45,15 @@ if(isset($_POST)){
   }else{
       mysqli_stmt_bind_param($stmt,"sss",$_POST['name'],$_POST['address'],$_SESSION['user_id']);
       mysqli_stmt_execute($stmt);
+  
       $result= mysqli_stmt_get_result($stmt);
     
   }
- 
+}catch(exception $ex){
+    http_response_code(404);
+    echo 'Something went wrong';
+    exit();
+}
     mysqli_close($conn); 
     if(isset($_POST['create_org'])){
         header('location:list-org.php');

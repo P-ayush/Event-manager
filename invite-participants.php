@@ -37,9 +37,14 @@ if(!isset($_GET['event_id'])){
     $password = "";
     $database="event_site";
     
-    $conn = mysqli_connect($servername,
+    try{$conn = mysqli_connect($servername,
             $username, $password,$database);
       $fetch= mysqli_query($conn, "select * from event where user_id=". $_SESSION['user_id']);   
+    }catch(exception $ex){
+        http_response_code(404);
+        echo 'something went wrong';
+        exit();
+    }
        $row=mysqli_fetch_array($fetch);
     
        if(is_array($row)){

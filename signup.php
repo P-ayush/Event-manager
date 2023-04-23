@@ -40,7 +40,7 @@ if(isset($_POST)){
   $password = "";
   $database="event_site";
   
-  $conn = mysqli_connect($servername,
+ try{ $conn = mysqli_connect($servername,
           $username, $password,$database);
           
  
@@ -59,6 +59,11 @@ if(isset($_POST)){
       echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
 }
+ }catch(exception $ex){
+  http_response_code(404);
+  echo 'Unable to signup';
+  exit();
+ }
  
   if(isset($_POST['signup'])){
     header('location:login.php');
