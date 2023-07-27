@@ -38,7 +38,7 @@ header('location:list-org.php');
   
     $result=mysqli_query($conn,$sql);
    }catch(exception $ex){
-    http_response_code(404);
+    http_response_code(500);
     echo 'Unable to fetch event list';
     exit();
    }

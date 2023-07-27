@@ -43,7 +43,7 @@ if(isset($_POST['yes'])){
        }
       }
     }catch(exception $ex){
-        http_response_code(404);
+        http_response_code(500);
         echo 'Unable to delete';
         exit();
     }

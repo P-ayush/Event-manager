@@ -23,7 +23,7 @@ $database="event_site";
 try {$conn = mysqli_connect($servername,
             $username, $password,$database) or die ('unable to connect');
 }catch(exception $ex){
-    http_response_code(404);
+    http_response_code(500);
     echo 'unable to login';
     exit();
 }
@@ -48,6 +48,7 @@ if(isset($_POST['login'])){
     $stmt=mysqli_stmt_init($conn);
     if(!mysqli_stmt_prepare($stmt,$sql)){
         echo "SQL error";
+        http_response_code(500);
     }else{
         mysqli_stmt_bind_param($stmt,"ss",$email,$pass);
         mysqli_stmt_execute($stmt);
@@ -64,6 +65,7 @@ if(isset($_POST['login'])){
         echo '<script>';
         echo 'alert("Invalid Username or Password")';
         echo '</script>';
+        http_response_code(400);
     }
     
  

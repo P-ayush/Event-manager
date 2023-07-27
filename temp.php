@@ -11,7 +11,7 @@ if(!isset($_SESSION['user_id']))
 <body>
 <h1 style=" text-align:center">EVENTS</h1> 
 <p style="font-size:180%">Create Event</P> 
-<form action="create_event.php" method="post">
+<form action="temp.php" method="post">
 <label for="event_name">Event Name: </label><br>        
 <input type="text" placeholder="Enter event name" name="event_name"  value= '<?php if(!empty($_POST['event_name'])){echo $_POST['event_name'];}else{echo "";} ?>' required=""><br>
 <label for="location">Location:</label><br>

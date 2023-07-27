@@ -39,7 +39,7 @@ if(!isset($_SESSION['user_id']))
   
     $result=mysqli_query($conn,$sql);
   }catch(exception $ex){
-    http_response_code(404);
+    http_response_code(500);
     echo 'Something went wrong';
     exit();
   }

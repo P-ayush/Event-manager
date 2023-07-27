@@ -41,18 +41,19 @@ if(!isset($_GET['event_id'])){
             $username, $password,$database);
       $fetch= mysqli_query($conn, "select * from event where user_id=". $_SESSION['user_id']);   
     }catch(exception $ex){
-        http_response_code(404);
+        http_response_code(500);
         echo 'something went wrong';
         exit();
     }
        $row=mysqli_fetch_array($fetch);
     
-       if(is_array($row)){
+   try   {if(is_array($row)){
           
     $sql="insert into participants(name,status,email,event_id) values(?,?,?,?)";
     $stmt=mysqli_stmt_init($conn);
     if(!mysqli_stmt_prepare($stmt,$sql)){
       echo "SQL error";
+      http_response_code(500);
   }else{
       mysqli_stmt_bind_param($stmt,"ssss",$_POST['name'],$_POST['status'],$_POST['email'],$_GET['event_id']);
       
@@ -64,6 +65,11 @@ if(!isset($_GET['event_id'])){
   } 
 
     }
+   }catch(exception $ex){
+    http_response_code(500);
+    echo 'Unable to invite';
+    exit();
+   }
 }
     }
     ?>

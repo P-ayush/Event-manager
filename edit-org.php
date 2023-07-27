@@ -22,8 +22,8 @@ try{$conn = mysqli_connect($servername,
 $sql="select name, address from organisation where organisation_id=".$_GET['org_id'];
 $result=mysqli_query($conn,$sql);
 }catch(exception $ex){
-  http_response_code(404);
-  echo 'unable to edit';
+  http_response_code(500);
+  echo 'something went wrong';
   exit();
 }
 $row = mysqli_fetch_assoc($result);
@@ -53,11 +53,16 @@ if(isset($_POST)){
   $stmt=mysqli_stmt_init($conn);
   if(!mysqli_stmt_prepare($stmt,$update)){
     echo "SQL error";
+    http_response_code(500);
 }else{
-    mysqli_stmt_bind_param($stmt,"sss",$_POST['name'],$_POST['address'],$_GET['org_id']);
+  try{  mysqli_stmt_bind_param($stmt,"sss",$_POST['name'],$_POST['address'],$_GET['org_id']);
     mysqli_stmt_execute($stmt);
     $result= mysqli_stmt_get_result($stmt);
-  
+  }catch{
+    http_response_code(500);
+    echo 'unable to edit';
+    exit();
+  }
 }
  
   
