@@ -75,14 +75,27 @@ function input_data($data) {
 <label for="phone">Phone no.: </label><br>        
 <input type="text" placeholder="Enter Phone no." name="phone" value= '<?php echo $phone ?>' required=""><span class="error">* <?php echo $phoneErr;?></span><br> 
 <label for="password">Password:</label><br>
-<input type="text" placeholder="Enter Password" name="password"  required=""><span class="error">* <?php echo $passwordErr;?></span><br>
+<input type="password" placeholder="Enter Password" name="password"  required=""><span class="error">* <?php echo $passwordErr;?></span><br>
 <label for="confirm password">Confirm Password:</label><br>
- <input type="text" placeholder="Re-enter Passsword" name="password"  required=""><br>
+ <input type="password" placeholder="Re-enter Passsword" name="confirm_password"  required=""><br><?php
+if(!empty($_POST)){
+if($_POST['password']!=$_POST['confirm_password']){
+  echo "Password doesn't match, please check";
+$unmatched_password='Password doesnot match';
+}
+}
+?>
 
 <input type="submit" name="signup">
 </form>
 </div>
 <?php
+// if(!empty($_POST)){
+// if($_POST['password']!=$_POST['confirm_password']){
+//   echo "Password doesn't match, please check";
+// $unmatched_password='Password doesnot match';
+// }
+// }
 if(isset($_POST)){
   if (!isset($_POST['email'], $_POST['password'], $_POST['phone'])) { 
 	
@@ -96,7 +109,7 @@ if(isset($_POST)){
  try{ $conn = mysqli_connect($servername,
           $username, $password,$database);
           
-          if(empty($emailErr) AND empty($phoneErr) AND empty($passwordErr) ){
+          if(empty($emailErr) AND empty($phoneErr) AND empty($passwordErr) AND empty($unmatched_password) ){
             
   $sql1="select * from users where email ='".$_POST['email']."' or phone_number= ". $_POST['phone'];
   // echo $sql1;
@@ -108,7 +121,7 @@ if(isset($_POST)){
     
 $entryerr="email or phone already used, use another ";
  }
- if(empty($entryerr)){
+ if(empty($entryerr) AND empty($unmatched_password)){
   $sql="insert into users(email , password , phone_number) values(?,?,?)";
   $stmt=mysqli_stmt_init($conn);
  
@@ -145,7 +158,7 @@ $entryerr="email or phone already used, use another ";
    exit();
  }
  
-  if(isset($_POST['signup']) AND empty($emailErr) AND empty($phoneErr) AND empty($passwordErr) AND empty($entryerr)){
+  if(isset($_POST['signup']) AND empty($emailErr) AND empty($phoneErr) AND empty($passwordErr) AND empty($entryerr) AND empty($unmatched_password) ){
    
      header('location:login.php');
   }else{

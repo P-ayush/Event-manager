@@ -22,6 +22,8 @@ $name=$address="";
 <input type="text" placeholder="Enter Name" name="name" value= '<?php if(!empty($_POST['address'])){echo $_POST['name'];}else{echo $name;} ?>' required=""><br>
 <label for="address">Address: </label><br>        
 <input type="text"  placeholder="Enter Address" name="address" value= '<?php if(!empty($_POST['address'])){echo $_POST['address'];}else{echo $address;} ?>' required=""><br>
+<label for="myfile">Logo/cover photo:</label><br>
+ <input type="file" id="myfile" name="myfile" accept="image/*" ><br>
 <input type="submit" name="create_org" >
 </form>
 <?php
@@ -41,8 +43,20 @@ if(isset($_POST)){
       $conn = mysqli_connect($servername,
             $username, $password,$database);
 
-        $sql1="select name from organisation where status ='active' and name='".$_POST['name']."'";  
-        $result1=mysqli_query($conn,$sql1);
+        $sql1="select name from organisation where status ='active' and name=? and user_id=?";  //per user
+        $stmt1=mysqli_stmt_init($conn);
+        if(!mysqli_stmt_prepare($stmt1,$sql1)){
+            echo "SQL error";
+            http_response_code(500);
+        }else{
+            mysqli_stmt_bind_param($stmt1,"ss",$_POST['name'],$_SESSION['user_id']);
+            mysqli_stmt_execute($stmt1);
+           
+            $result1= mysqli_stmt_get_result($stmt1);
+           
+        }
+        // echo $sql1;
+        // $result1=mysqli_query($conn,$sql1);
         $row = mysqli_fetch_assoc($result1);
         $name=$_POST['name'];
         $address=$_POST['address'];
@@ -83,7 +97,7 @@ if(isset($_POST)){
 }
 mysqli_close($conn); 
     if(isset($_POST['create_org']) AND empty($err)){
-         header('location:list-org.php');
+          header('location:list-org.php');
             }else{
               echo $err;
             }

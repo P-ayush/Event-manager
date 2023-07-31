@@ -35,7 +35,7 @@ try {$conn = mysqli_connect($servername,
 <label for="email">E-mail:</label><br>
 <input type="text" name="email" required=""><br>
 <label for="password">Password:</label><br>
-<input type="text" name="password" required=""><br>
+<input type="password" name="password" required=""><br>
 
 
 <input type="submit" name="login" value="login">

@@ -11,7 +11,7 @@ if(!isset($_SESSION['user_id']))
 <body>
 <h1 style=" text-align:center">EVENTS</h1> 
 <p style="font-size:180%">Create Event</P> 
-<form action="create_event.php" method="post">
+<form action="create-event.php" method="post">
 <label for="event_name">Event Name: </label><br>        
 <input type="text" placeholder="Enter event name" name="event_name"  value= '<?php if(!empty($_POST['event_name'])){echo $_POST['event_name'];}else{echo "";} ?>' required=""><br>
 <label for="location">Location:</label><br>
@@ -24,6 +24,8 @@ if(!isset($_SESSION['user_id']))
  <input type="text" placeholder="Enter max participants" name="max_participants" value= '<?php if(!empty($_POST['max_participants'])){echo $_POST['max_participants'];}else{echo "";} ?>' required=""><br>
  <label for="reg_close">Registration Close:</label><br>
  <input type="text" name="reg_close" value= '<?php if(!empty($_POST['reg_close'])){echo $_POST['reg_close'];}else{echo "";} ?>'   required=""><br>
+ <label for="myfile">Event Poster:</label><br>
+ <input type="file" id="myfile" name="myfile" accept="image/*" ><br>
 <input type="submit" name ="create_event" >
 </form> 
 
@@ -42,17 +44,29 @@ if(isset($_POST)){
    try{ $conn = mysqli_connect($servername,
             $username, $password,$database);
             
-            $sql1="select event_name from event where status ='active' and event_name='".$_POST['event_name']."'";  
-            $result1=mysqli_query($conn,$sql1);
+            $sql1="select event_name from event where status ='active' and event_name=? and user_id=?"; // can be unique at organisation level
+            $stmt1=mysqli_stmt_init($conn);
+            if(!mysqli_stmt_prepare($stmt1,$sql1)){
+                echo "SQL error";
+                http_response_code(500);
+            }else{
+                mysqli_stmt_bind_param($stmt1,"ss",$_POST['event_name'],$_SESSION['user_id']);
+                mysqli_stmt_execute($stmt1);
+               
+                $result1= mysqli_stmt_get_result($stmt1);
+               
+            }
+            // echo $sql1;
+            // $result1=mysqli_query($conn,$sql1);
             $row = mysqli_fetch_assoc($result1);
-           
+        
             if($_POST['event_name']== $row['event_name']){
               http_response_code(400);//duplicate entry
               
           $err="This name already used, use another ";
         
            }
-           
+        
            if(empty($err)){
     
     $sql="insert into event(event_name,location,start_time,end_time,maximum_participants,registration_close,user_id,status) values(?,?,?,?,?,?,?,'active')";
