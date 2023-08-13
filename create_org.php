@@ -17,16 +17,46 @@ $name=$address="";
 <html>
 <body>
 <h1 style="font-size:160%;text-align:center">Create Organisation</h1>
-<form action="create_org.php" method="post">
+<form action="create_org.php" method="post" enctype="multipart/form-data">
 <label for="name">Name:</label><br>
 <input type="text" placeholder="Enter Name" name="name" value= '<?php if(!empty($_POST['address'])){echo $_POST['name'];}else{echo $name;} ?>' required=""><br>
 <label for="address">Address: </label><br>        
 <input type="text"  placeholder="Enter Address" name="address" value= '<?php if(!empty($_POST['address'])){echo $_POST['address'];}else{echo $address;} ?>' required=""><br>
 <label for="myfile">Logo/cover photo:</label><br>
- <input type="file" id="myfile" name="myfile" accept="image/*" ><br>
+ <input type="file" id="myfile" name="myfile" required="" accept="image/*" ><br><div id="fileResult"></div> <div id="fileSubmit"></div>
+ <script> 
+ let myfile = document.getElementById("myfile");
+let fileResult = document.getElementById("fileResult");
+let fileSubmit = document.getElementById("fileSubmit");
+ myfile.addEventListener("change", function () {  
+  if (myfile.files.length > 0) {
+    const fileSize = myfile.files.item(0).size;
+    const fileMb = fileSize / 1024 ** 2;
+    alert(fileMb);
+  
+if (fileMb >= 2) {
+      fileResult.innerHTML = "Please select a file less than 2MB.";
+      fileSubmit.disabled = true;
+    } else {
+      fileResult.innerHTML = "Success, your file is " + fileMb.toFixed(1) + "MB.";
+      fileSubmit.disabled = true;
+    }
+  }
+});
+</script>
 <input type="submit" name="create_org" >
 </form>
 <?php
+// if(isset($_POST['create_org'])){
+//   $file_name=$_FILES['myfile']['name'];
+//   $file_size=$_FILES['myfile']['size'];
+//   $file_type=$_FILES['myfile']['type'];
+//   $file_tmp=$_FILES['myfile']['tmp_name'];
+//   $file_store="uploads/".$file_name;
+//   if(move_uploaded_file($file_tmp,$file_store)){
+//     echo "image uploaded";
+//   }
+// }
 if(isset($_POST)){
     
     if (!isset($_POST['name'], $_POST['address'])) { 
@@ -68,18 +98,18 @@ if(isset($_POST)){
        }
        
        if(empty($err)){
-    $sql="insert into organisation(name, address,user_id,status) values(?,?,?,'active')";
+    $sql="insert into organisation(name, address,user_id,status,image) values(?,?,?,'active',?)";
     $stmt=mysqli_stmt_init($conn);
        
     if(!mysqli_stmt_prepare($stmt,$sql)){
       echo "SQL error";
       http_response_code(500);
   }else{
-      mysqli_stmt_bind_param($stmt,"sss",$_POST['name'],$_POST['address'],$_SESSION['user_id']);
+      mysqli_stmt_bind_param($stmt,"ssss",$_POST['name'],$_POST['address'],$_SESSION['user_id'],$_FILES['myfile']['name']);
       mysqli_stmt_execute($stmt);
   
       $result= mysqli_stmt_get_result($stmt);
-    
+     
   }
 }
 }catch(exception $ex){
@@ -95,12 +125,21 @@ if(isset($_POST)){
     // </form>';
     exit();
 }
-mysqli_close($conn); 
+ 
     if(isset($_POST['create_org']) AND empty($err)){
+      $file_name=$_FILES['myfile']['name'];
+      $file_size=$_FILES['myfile']['size'];
+      $file_type=$_FILES['myfile']['type'];
+      $file_tmp=$_FILES['myfile']['tmp_name'];
+      $file_store="uploads/".$file_name;
+      if(move_uploaded_file($file_tmp,$file_store)){
+        echo "image uploaded";
+      }
           header('location:list-org.php');
             }else{
               echo $err;
             }
+            mysqli_close($conn);
            
  }
  

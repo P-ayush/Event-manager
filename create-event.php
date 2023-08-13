@@ -11,7 +11,7 @@ if(!isset($_SESSION['user_id']))
 <body>
 <h1 style=" text-align:center">EVENTS</h1> 
 <p style="font-size:180%">Create Event</P> 
-<form action="create-event.php" method="post">
+<form action="create-event.php" method="post" enctype="multipart/form-data">
 <label for="event_name">Event Name: </label><br>        
 <input type="text" placeholder="Enter event name" name="event_name"  value= '<?php if(!empty($_POST['event_name'])){echo $_POST['event_name'];}else{echo "";} ?>' required=""><br>
 <label for="location">Location:</label><br>
@@ -25,7 +25,27 @@ if(!isset($_SESSION['user_id']))
  <label for="reg_close">Registration Close:</label><br>
  <input type="text" name="reg_close" value= '<?php if(!empty($_POST['reg_close'])){echo $_POST['reg_close'];}else{echo "";} ?>'   required=""><br>
  <label for="myfile">Event Poster:</label><br>
- <input type="file" id="myfile" name="myfile" accept="image/*" ><br>
+ <input type="file" id="myfile" name="myfile" accept="image/*" required=""><br><div id="fileResult"></div> <div id="fileSubmit"></div>
+ <script> 
+ let myfile = document.getElementById("myfile");
+let fileResult = document.getElementById("fileResult");
+let fileSubmit = document.getElementById("fileSubmit");
+ myfile.addEventListener("change", function () {  
+  if (myfile.files.length > 0) {
+    const fileSize = myfile.files.item(0).size;
+    const fileMb = fileSize / 1024 ** 2;
+    alert(fileMb);
+  
+if (fileMb >= 2) {
+      fileResult.innerHTML = "Please select a file less than 2MB.";
+      fileSubmit.disabled = true;
+    } else {
+      fileResult.innerHTML = "Success, your file is " + fileMb.toFixed(1) + "MB.";
+      fileSubmit.disabled = true;
+    }
+  }
+});
+</script>
 <input type="submit" name ="create_event" >
 </form> 
 
@@ -69,13 +89,13 @@ if(isset($_POST)){
         
            if(empty($err)){
     
-    $sql="insert into event(event_name,location,start_time,end_time,maximum_participants,registration_close,user_id,status) values(?,?,?,?,?,?,?,'active')";
+    $sql="insert into event(event_name,location,start_time,end_time,maximum_participants,registration_close,user_id,status,image) values(?,?,?,?,?,?,?,'active',?)";
     $stmt=mysqli_stmt_init($conn);
     if(!mysqli_stmt_prepare($stmt,$sql)){
       echo "SQL error";
       http_response_code(500);
   }else{
-      mysqli_stmt_bind_param($stmt,"sssssss",$_POST['event_name'],$_POST['location'],$_POST['start_time'],$_POST['end_time'],$_POST['max_participants'],$_POST['reg_close'],$_SESSION['user_id']);
+      mysqli_stmt_bind_param($stmt,"ssssssss",$_POST['event_name'],$_POST['location'],$_POST['start_time'],$_POST['end_time'],$_POST['max_participants'],$_POST['reg_close'],$_SESSION['user_id'],$_FILES['myfile']['name']);
       mysqli_stmt_execute($stmt);
       $result= mysqli_stmt_get_result($stmt);
     
@@ -105,6 +125,14 @@ exit();
    }
   mysqli_close($conn);
     if(isset($_POST['create_event']) AND empty($err)){
+      $file_name=$_FILES['myfile']['name'];
+      $file_size=$_FILES['myfile']['size'];
+      $file_type=$_FILES['myfile']['type'];
+      $file_tmp=$_FILES['myfile']['tmp_name'];
+      $file_store="uploads/".$file_name;
+      if(move_uploaded_file($file_tmp,$file_store)){
+        echo "image uploaded";
+      }
         header('location:list-event-org_id.php');
     }else{
         echo $err;
